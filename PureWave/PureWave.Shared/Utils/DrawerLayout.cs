@@ -49,6 +49,14 @@ namespace DrawerLayout
 
         public static readonly DependencyProperty IsDrawerOpenProperty = DependencyProperty.Register("IsDrawerOpen", typeof(bool), typeof(DrawerLayout), new PropertyMetadata(false));
 
+        public double MaxDrawerWidth
+        {
+            get { return (double)GetValue(MaxDrawerWidthProperty); }
+            set { SetValue(MaxDrawerWidthProperty, value); }
+        }
+
+        public static readonly DependencyProperty MaxDrawerWidthProperty = DependencyProperty.Register("MaxDrawerWidth", typeof(double), typeof(DrawerLayout), new PropertyMetadata(double.NaN));
+
         private PropertyPath TranslatePath
         {
             get { return _translatePath; }
@@ -70,18 +78,22 @@ namespace DrawerLayout
         public void ResizeDrawer()
         {
             var o = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().Orientation;
+            double width;
             if (o == ApplicationViewOrientation.Landscape)
             {
-                _listFragment.Width = Window.Current.Bounds.Width / 2;
+                width = Window.Current.Bounds.Width / 2;
                 _listFragment.Margin = new Thickness(MinusMargin, 0, 0, 0);
             }
 
             else
             {
                 _listFragment.Margin = new Thickness(0, 0, 0, 0);
-                _listFragment.Width = (Window.Current.Bounds.Width / 3) * 2;
+                width = (Window.Current.Bounds.Width / 3) * 2;
             }
-
+            if (!double.IsNaN(MaxDrawerWidth))
+                _listFragment.Width = Math.Min(width, MaxDrawerWidth);
+            else
+                _listFragment.Width = width;
         }
 
         public void InitializeDrawerLayout()

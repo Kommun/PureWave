@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.Media;
+using PureWave.ViewModel;
 
 namespace PureWave.View
 {
@@ -22,13 +23,14 @@ namespace PureWave.View
     /// </summary>
     public sealed partial class MainView : Page
     {
-        SystemMediaTransportControls _systemControls;
+        private MainViewModel _vm = new MainViewModel();
+        private SystemMediaTransportControls _systemControls;
 
         public MainView()
         {
             this.InitializeComponent();
             DrawerLayout.InitializeDrawerLayout();
-            DataContext = new ViewModel.MainViewModel();
+            DataContext = _vm;
             InitializeTransportControls();
         }
 
@@ -82,6 +84,7 @@ namespace PureWave.View
         /// <param name="e"></param>
         private void backgroundMusic_CurrentStateChanged(object sender, RoutedEventArgs e)
         {
+            _vm.UpdatePlayPauseIcon(backgroundMusic.CurrentState);
             switch (backgroundMusic.CurrentState)
             {
                 case MediaElementState.Playing:

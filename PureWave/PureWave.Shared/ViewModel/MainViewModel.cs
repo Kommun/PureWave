@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.System;
+using Windows.UI.Xaml.Media;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using PureWave.Utils;
@@ -42,7 +43,7 @@ namespace PureWave.ViewModel
         /// </summary>
         public string StreamUrl
         {
-            get { return IsHightQuality ? "" : "http://s5.imgradio.pro/RusHit48"; }
+            get { return IsHightQuality ? "http://s5.imgradio.pro/RusHit48" : "http://s5.imgradio.pro/RusHit48"; }
         }
 
         /// <summary>
@@ -94,6 +95,11 @@ namespace PureWave.ViewModel
             get { return Volume > 0 ? "\uE15D" : "\uE198"; }
         }
 
+        /// <summary>
+        /// Иконка кнопки Играть/Пауза
+        /// </summary>
+        public string PlayPauseIcon { get; set; }
+
         #endregion
 
         /// <summary>
@@ -114,6 +120,16 @@ namespace PureWave.ViewModel
                     await Task.Delay(TimeSpan.FromSeconds(2));
                 }
             });
+        }
+
+        /// <summary>
+        /// Обновить иконку кнопки Играть/Пауза
+        /// </summary>
+        /// <param name="state"></param>
+        public void UpdatePlayPauseIcon(MediaElementState state)
+        {
+            PlayPauseIcon = state == MediaElementState.Playing ? "/Images/pause.png" : "/Images/play.png";
+            OnPropertyChanged("PlayPauseIcon");
         }
 
         /// <summary>

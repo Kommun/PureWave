@@ -22,8 +22,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\MainViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Images\background.png" />
     <Content Include="$(MSBuildThisFileDirectory)Images\defaultBackground.jpg" />
+    <Content Include="$(MSBuildThisFileDirectory)Images\firstLogo.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Images\logo.png" />
     <Content Include="$(MSBuildThisFileDirectory)Images\menu.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Images\pause.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Images\pen.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Images\play.png" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)Themes\Generic.xaml">
