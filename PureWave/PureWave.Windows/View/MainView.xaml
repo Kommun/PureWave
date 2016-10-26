@@ -16,19 +16,24 @@
         </Grid.RowDefinitions>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="70"/>
+                <ColumnDefinition Width="90"/>
                 <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="90"/>
             </Grid.ColumnDefinitions>
             <controls:CustomButton x:Name="btnShowMenu"
                                    Click="btnShowMenu_Click">
+                <Image Source="/Images/menu.png"/>
+            </controls:CustomButton>
+            <controls:CustomButton Command="{Binding SendFeedbackCommand}"
+                                   Grid.Column="2">
                 <Image Source="/Images/menu.png"/>
             </controls:CustomButton>
         </Grid>
 
         <drawerLayout:DrawerLayout x:Name="DrawerLayout"
                                    IsDrawerOpen="{Binding IsMenuOpen, Mode=TwoWay}"
-                                   Grid.Row="1">
+                                   Grid.Row="1"
+                                   >
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -40,7 +45,7 @@
                 <MediaElement x:Name="backgroundMusic" 
                       AutoPlay="True"
                       AudioCategory="BackgroundCapableMedia" 
-                      Source="http://s5.imgradio.pro/RusHit48"
+                      Source="{Binding StreamUrl}"
                       Volume="{Binding Volume}"
                       CurrentStateChanged="backgroundMusic_CurrentStateChanged">
                 </MediaElement>
@@ -79,16 +84,21 @@
                         Grid.Column="1"/>
                 </Grid>
             </Grid>
-            <Grid Background="DarkGray">
+            <Grid Background="DimGray">
                 <StackPanel>
                     <HyperlinkButton Content="Сайт"
-                                 Foreground="SteelBlue"
-                                 FontSize="30"
+                                 Foreground="White"
+                                 FontSize="20"
                                  Command="{Binding SiteCommand}"/>
                     <HyperlinkButton Content="Группа ВК"
-                                 Foreground="SteelBlue"
-                                 FontSize="30"
+                                 Foreground="White"
+                                 FontSize="20"
                                  Command="{Binding VKCommand}"/>
+                    <ToggleSwitch OnContent="128 бит"
+                                  OffContent="64 бит"
+                                  IsOn="{Binding IsHightQuality, Mode=TwoWay}"
+                                  FontSize="20"
+                                  Margin="10,0,0,0"/>
                 </StackPanel>
             </Grid>
         </drawerLayout:DrawerLayout>

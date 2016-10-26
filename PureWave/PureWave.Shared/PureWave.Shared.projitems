@@ -17,6 +17,7 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Controls\CustomButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\CustomCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\DrawerLayout.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\PropertyChangedBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\MainViewModel.cs" />
   </ItemGroup>

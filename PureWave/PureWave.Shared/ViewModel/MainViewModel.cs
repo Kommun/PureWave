@@ -13,13 +13,14 @@ namespace PureWave.ViewModel
     public class MainViewModel : PropertyChangedBase
     {
         private double _volume = 1;
+        private bool _isHightQuality = true;
 
         #region Properties
 
         /// <summary>
-        /// Показать/скрыть меню
+        /// Отправить отзыв
         /// </summary>
-        public CustomCommand ShowHideMenuCommand { get; set; }
+        public CustomCommand SendFeedbackCommand { get; set; }
 
         /// <summary>
         /// Вкл/выкл звук
@@ -35,6 +36,27 @@ namespace PureWave.ViewModel
         /// Группа ВК
         /// </summary>
         public CustomCommand VKCommand { get; set; } = new CustomCommand(async (p) => await Launcher.LaunchUriAsync(new Uri("https://vk.com/pure_wave")));
+
+        /// <summary>
+        /// Ссылка на поток
+        /// </summary>
+        public string StreamUrl
+        {
+            get { return IsHightQuality ? "" : "http://s5.imgradio.pro/RusHit48"; }
+        }
+
+        /// <summary>
+        /// Высокое/низкое качество
+        /// </summary>
+        public bool IsHightQuality
+        {
+            get { return _isHightQuality; }
+            set
+            {
+                _isHightQuality = value;
+                OnPropertyChanged("StreamUrl");
+            }
+        }
 
         /// <summary>
         /// Исполнитель
@@ -80,6 +102,7 @@ namespace PureWave.ViewModel
         public MainViewModel()
         {
             SoundCommand = new CustomCommand(Sound);
+            SendFeedbackCommand = new CustomCommand(SendFeedback);
 
             GetBackground();
 
@@ -120,6 +143,16 @@ namespace PureWave.ViewModel
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => OnPropertiesChanged("Artist", "Track"));
             }
             catch { }
+        }
+
+        /// <summary>
+        /// Отправить отзыв
+        /// </summary>
+        /// <param name="parameter"></param>
+        private async void SendFeedback(object parameter)
+        {
+            var mailto = new Uri($"mailto:?to=purewaveradio@gmail.com&subject={"Обратная связь"}");
+            await Launcher.LaunchUriAsync(mailto);
         }
 
         /// <summary>
