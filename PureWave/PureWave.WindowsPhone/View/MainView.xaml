@@ -41,7 +41,6 @@
 
         <drawerLayout:DrawerLayout x:Name="DrawerLayout"
                                    IsDrawerOpen="{Binding IsMenuOpen, Mode=TwoWay}"
-                                   MaxDrawerWidth="300"
                                    Grid.Row="1">
             <Grid>
                 <Grid.RowDefinitions>
@@ -58,7 +57,7 @@
                       Volume="{Binding Volume}"
                       CurrentStateChanged="backgroundMusic_CurrentStateChanged">
                 </MediaElement>
-                
+
                 <!--Изображение-->
                 <Image Source="{Binding BackgroundSource}"
                        HorizontalAlignment="Center"
@@ -75,7 +74,7 @@
                        FontSize="15"
                        HorizontalAlignment="Center"/>
                 </StackPanel>
-                
+
                 <!--Играть/Пауза-->
                 <controls:CustomButton x:Name="btnPlayPause"
                                        HorizontalAlignment="Center"
@@ -124,11 +123,19 @@
                                  FontSize="20"
                                  Command="{Binding VKCommand}"/>
                     <!--Бит-рейт-->
-                    <ToggleSwitch OnContent="128 бит"
-                                  OffContent="64 бит"
-                                  IsOn="{Binding IsHightQuality, Mode=TwoWay}"
-                                  FontSize="20"
-                                  Margin="10,0,0,0"/>
+                    <ToggleSwitch IsOn="{Binding IsHightQuality, Mode=TwoWay}"
+                                  VerticalContentAlignment="Center">
+                        <ToggleSwitch.OnContent>
+                            <TextBlock Text="128 бит"
+                                       FontSize="20"
+                                       Margin="0,0,0,8"/>
+                        </ToggleSwitch.OnContent>
+                        <ToggleSwitch.OffContent>
+                            <TextBlock Text="64 бит"
+                                       FontSize="20"
+                                       Margin="0,0,0,8"/>
+                        </ToggleSwitch.OffContent>
+                    </ToggleSwitch>
                 </StackPanel>
             </Grid>
         </drawerLayout:DrawerLayout>
