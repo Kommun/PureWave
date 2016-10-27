@@ -16,8 +16,10 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Controls\CustomButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\VolumeMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\CustomCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\DrawerLayout.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\Messenger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\PropertyChangedBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\MainViewModel.cs" />
   </ItemGroup>

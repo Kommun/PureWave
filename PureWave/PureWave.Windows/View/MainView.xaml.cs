@@ -84,7 +84,7 @@ namespace PureWave.View
         /// <param name="e"></param>
         private void backgroundMusic_CurrentStateChanged(object sender, RoutedEventArgs e)
         {
-            _vm.UpdatePlayPauseIcon(backgroundMusic.CurrentState);
+            _vm.UpdatePlayPauseIcon(backgroundMusic.CurrentState == MediaElementState.Playing);
             switch (backgroundMusic.CurrentState)
             {
                 case MediaElementState.Playing:

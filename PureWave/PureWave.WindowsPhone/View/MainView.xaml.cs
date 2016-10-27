@@ -14,7 +14,10 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.Media;
+using Windows.Media.Playback;
 using PureWave.ViewModel;
+using PureWave.Model;
+using PureWave.Utils;
 
 namespace PureWave.View
 {
@@ -24,44 +27,22 @@ namespace PureWave.View
     public sealed partial class MainView : Page
     {
         private MainViewModel _vm = new MainViewModel();
-        private SystemMediaTransportControls _systemControls;
 
         public MainView()
         {
             this.InitializeComponent();
             DrawerLayout.InitializeDrawerLayout();
             DataContext = _vm;
-            InitializeTransportControls();
+
+            Messenger.Default.Register<VolumeMessage>(this, (vm) => BackgroundMediaPlayer.Current.Volume = vm.Volume);
+            BackgroundMediaPlayer.Current.CurrentStateChanged += Current_CurrentStateChanged;
+            BackgroundMediaPlayer.Current.SetUriSource(new Uri(_vm.StreamUrl));
+            BackgroundMediaPlayer.Current.Play();
         }
 
-        /// <summary>
-        /// Инициализировать кнопки управления проигрывателем
-        /// </summary>
-        private void InitializeTransportControls()
+        private void Current_CurrentStateChanged(MediaPlayer sender, object args)
         {
-            // Hook up app to system transport controls.
-            _systemControls = SystemMediaTransportControls.GetForCurrentView();
-            _systemControls.ButtonPressed += SystemControls_ButtonPressed;
-
-            // Register to handle the following system transpot control buttons.
-            _systemControls.IsPlayEnabled = true;
-            _systemControls.IsPauseEnabled = true;
-        }
-
-        private void SystemControls_ButtonPressed(SystemMediaTransportControls sender,
-                SystemMediaTransportControlsButtonPressedEventArgs args)
-        {
-            switch (args.Button)
-            {
-                case SystemMediaTransportControlsButton.Play:
-                    backgroundMusic.Play();
-                    break;
-                case SystemMediaTransportControlsButton.Pause:
-                    backgroundMusic.Pause();
-                    break;
-                default:
-                    break;
-            }
+            _vm.UpdatePlayPauseIcon(BackgroundMediaPlayer.Current.CurrentState == MediaPlayerState.Playing);
         }
 
         /// <summary>
@@ -71,37 +52,14 @@ namespace PureWave.View
         /// <param name="e"></param>
         private void btnPlayPause_Click(object sender, RoutedEventArgs e)
         {
-            if (backgroundMusic.CurrentState == MediaElementState.Playing)
-                backgroundMusic.Pause();
-            else
-                backgroundMusic.Play();
-        }
-
-        /// <summary>
-        /// Обработчик изменения состояния проигрывателя
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void backgroundMusic_CurrentStateChanged(object sender, RoutedEventArgs e)
-        {
-            _vm.UpdatePlayPauseIcon(backgroundMusic.CurrentState);
-            switch (backgroundMusic.CurrentState)
+            try
             {
-                case MediaElementState.Playing:
-                    _systemControls.PlaybackStatus = MediaPlaybackStatus.Playing;
-                    break;
-                case MediaElementState.Paused:
-                    _systemControls.PlaybackStatus = MediaPlaybackStatus.Paused;
-                    break;
-                case MediaElementState.Stopped:
-                    _systemControls.PlaybackStatus = MediaPlaybackStatus.Stopped;
-                    break;
-                case MediaElementState.Closed:
-                    _systemControls.PlaybackStatus = MediaPlaybackStatus.Closed;
-                    break;
-                default:
-                    break;
+                if (BackgroundMediaPlayer.Current.CurrentState == MediaPlayerState.Playing)
+                    BackgroundMediaPlayer.Current.Pause();
+                else
+                    BackgroundMediaPlayer.Current.Play();
             }
+            catch { }
         }
 
         /// <summary>

@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Xaml.Media;
 using Windows.ApplicationModel.Core;
+using Windows.Foundation.Collections;
 using Windows.UI.Core;
 using PureWave.Utils;
+using PureWave.Model;
+#if WINDOWS_PHONE_APP
+    using Windows.Media.Playback;
+#endif
 
 namespace PureWave.ViewModel
 {
@@ -83,6 +88,7 @@ namespace PureWave.ViewModel
             set
             {
                 _volume = value;
+                Messenger.Default.Send(new VolumeMessage { Volume = value });
                 OnPropertiesChanged("Volume", "SoundIcon");
             }
         }
@@ -126,10 +132,10 @@ namespace PureWave.ViewModel
         /// Обновить иконку кнопки Играть/Пауза
         /// </summary>
         /// <param name="state"></param>
-        public void UpdatePlayPauseIcon(MediaElementState state)
+        public async void UpdatePlayPauseIcon(bool isPlaying)
         {
-            PlayPauseIcon = state == MediaElementState.Playing ? "/Images/pause.png" : "/Images/play.png";
-            OnPropertyChanged("PlayPauseIcon");
+            PlayPauseIcon = isPlaying ? "/Images/pause.png" : "/Images/play.png";
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => OnPropertyChanged("PlayPauseIcon"));
         }
 
         /// <summary>
@@ -137,10 +143,14 @@ namespace PureWave.ViewModel
         /// </summary>
         private async void GetBackground()
         {
-            var googleUrl = await (new System.Net.Http.HttpClient().GetStringAsync("https://drive.google.com/uc?export=download&id=0B1OTy-YRdX7uek9BOFpYd3pRV2s"));
-            var id = Regex.Match(googleUrl, "id=(.+)").Groups[1].Value;
-            BackgroundSource = $"https://drive.google.com/uc?export=download&id={id}";
-            OnPropertyChanged("BackgroundSource");
+            try
+            {
+                var googleUrl = await (new System.Net.Http.HttpClient().GetStringAsync("https://drive.google.com/uc?export=download&id=0B1OTy-YRdX7uek9BOFpYd3pRV2s"));
+                var id = Regex.Match(googleUrl, "id=(.+)").Groups[1].Value;
+                BackgroundSource = $"https://drive.google.com/uc?export=download&id={id}";
+                OnPropertyChanged("BackgroundSource");
+            }
+            catch { }
         }
 
         /// <summary>
@@ -156,6 +166,12 @@ namespace PureWave.ViewModel
 
                 Artist = trackParams[0];
                 Track = trackParams[1];
+#if WINDOWS_PHONE_APP
+            var vs = new ValueSet();
+            vs.Add(new KeyValuePair<string,object>("Artist", Artist));
+            vs.Add(new KeyValuePair<string, object>("Title", Track));
+            BackgroundMediaPlayer.SendMessageToBackground(vs);   
+#endif
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => OnPropertiesChanged("Artist", "Track"));
             }
             catch { }

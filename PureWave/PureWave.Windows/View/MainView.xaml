@@ -7,7 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:PureWave.Controls"
     xmlns:drawerLayout="using:DrawerLayout"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    RequestedTheme="Dark">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -58,7 +59,7 @@
                       Volume="{Binding Volume}"
                       CurrentStateChanged="backgroundMusic_CurrentStateChanged">
                 </MediaElement>
-                
+
                 <!--Изображение-->
                 <Image Source="{Binding BackgroundSource}"
                        HorizontalAlignment="Center"
@@ -75,7 +76,7 @@
                        FontSize="15"
                        HorizontalAlignment="Center"/>
                 </StackPanel>
-                
+
                 <!--Играть/Пауза-->
                 <controls:CustomButton x:Name="btnPlayPause"
                                        HorizontalAlignment="Center"
