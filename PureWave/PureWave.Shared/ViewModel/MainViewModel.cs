@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Net.Http;
 using Windows.System;
 using Windows.UI.Xaml.Media;
 using Windows.ApplicationModel.Core;
@@ -106,6 +107,19 @@ namespace PureWave.ViewModel
         /// </summary>
         public string PlayPauseIcon { get; set; }
 
+        /// <summary>
+        /// Http-клиент
+        /// </summary>
+        public HttpClient HttpClient
+        {
+            get
+            {
+                var client = new HttpClient();
+                client.DefaultRequestHeaders.IfModifiedSince = DateTime.Now;
+                return client;
+            }
+        }
+
         #endregion
 
         /// <summary>
@@ -145,7 +159,7 @@ namespace PureWave.ViewModel
         {
             try
             {
-                var googleUrl = await (new System.Net.Http.HttpClient().GetStringAsync("https://drive.google.com/uc?export=download&id=0B1OTy-YRdX7uek9BOFpYd3pRV2s"));
+                var googleUrl = await HttpClient.GetStringAsync("https://drive.google.com/uc?export=download&id=0B1OTy-YRdX7uek9BOFpYd3pRV2s");
                 var id = Regex.Match(googleUrl, "id=(.+)").Groups[1].Value;
                 BackgroundSource = $"https://drive.google.com/uc?export=download&id={id}";
                 OnPropertyChanged("BackgroundSource");
@@ -161,17 +175,22 @@ namespace PureWave.ViewModel
         {
             try
             {
-                var trackInfo = await new System.Net.Http.HttpClient().GetStringAsync("http://purewave.ru/assets/snippets/id3/id3.txt");
+                var trackInfo = await HttpClient.GetStringAsync("http://purewave.ru/assets/snippets/id3/id3.txt");
                 var trackParams = trackInfo.Split(':');
+
+                if (Artist == trackParams[0] && Track == trackParams[1])
+                    return;
 
                 Artist = trackParams[0];
                 Track = trackParams[1];
+
 #if WINDOWS_PHONE_APP
-            var vs = new ValueSet();
-            vs.Add(new KeyValuePair<string,object>("Artist", Artist));
-            vs.Add(new KeyValuePair<string, object>("Title", Track));
-            BackgroundMediaPlayer.SendMessageToBackground(vs);   
+                var vs = new ValueSet();
+                vs.Add(new KeyValuePair<string,object>("Artist", Artist));
+                vs.Add(new KeyValuePair<string, object>("Title", Track));
+                BackgroundMediaPlayer.SendMessageToBackground(vs);   
 #endif
+
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => OnPropertiesChanged("Artist", "Track"));
             }
             catch { }
