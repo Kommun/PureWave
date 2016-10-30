@@ -41,7 +41,6 @@
         </Grid>
 
         <drawerLayout:DrawerLayout x:Name="DrawerLayout"
-                                   IsDrawerOpen="{Binding IsMenuOpen, Mode=TwoWay}"
                                    Grid.Row="1">
             <Grid>
                 <Grid.RowDefinitions>

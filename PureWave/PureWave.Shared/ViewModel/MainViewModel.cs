@@ -49,7 +49,7 @@ namespace PureWave.ViewModel
         /// </summary>
         public string StreamUrl
         {
-            get { return IsHightQuality ? "http://s5.imgradio.pro/RusHit48" : "http://s5.imgradio.pro/RusHit48"; }
+            get { return IsHightQuality ? "http://84.22.137.76:8000/myradio" : "http://84.22.137.76:8000/pure"; }
         }
 
         /// <summary>
@@ -62,6 +62,11 @@ namespace PureWave.ViewModel
             {
                 _isHightQuality = value;
                 OnPropertyChanged("StreamUrl");
+
+#if WINDOWS_PHONE_APP
+                // Устанавливаем источник вручную, т.к. забиндить нельзя
+                BackgroundMediaPlayer.Current.SetUriSource(new Uri(StreamUrl));
+#endif
             }
         }
 
@@ -127,11 +132,36 @@ namespace PureWave.ViewModel
         /// </summary>
         public MainViewModel()
         {
+#if WINDOWS_PHONE_APP
+            // Подписываемся на сообщения фонового потока
+            BackgroundMediaPlayer.MessageReceivedFromBackground += BackgroundMediaPlayer_MessageReceivedFromBackground; 
+#else
+            StartTrackUpdater();
+#endif
+
+            IsHightQuality = true;
             SoundCommand = new CustomCommand(Sound);
             SendFeedbackCommand = new CustomCommand(SendFeedback);
-
             GetBackground();
+        }
 
+#if WINDOWS_PHONE_APP
+        /// <summary>
+        /// Обработчик получения сообщения из фонового потока
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BackgroundMediaPlayer_MessageReceivedFromBackground(object sender, MediaPlayerDataReceivedEventArgs e)
+        {
+            StartTrackUpdater();
+        }
+#endif
+
+        /// <summary>
+        /// Запустить фоновый поток для обновления информации о треке
+        /// </summary>
+        private void StartTrackUpdater()
+        {
             Task.Run(async () =>
             {
                 while (true)
@@ -185,6 +215,7 @@ namespace PureWave.ViewModel
                 Track = trackParams[1];
 
 #if WINDOWS_PHONE_APP
+                // Отправляем фоновому потоку информацию о треке
                 var vs = new ValueSet();
                 vs.Add(new KeyValuePair<string,object>("Artist", Artist));
                 vs.Add(new KeyValuePair<string, object>("Title", Track));

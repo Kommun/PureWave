@@ -28,6 +28,7 @@ namespace BackgroundAudio
             systemmediatransportcontrol.IsPauseEnabled = true;
             systemmediatransportcontrol.IsPlayEnabled = true;
             BackgroundMediaPlayer.MessageReceivedFromForeground += BackgroundMediaPlayer_MessageReceivedFromForeground;
+            BackgroundMediaPlayer.SendMessageToForeground(new ValueSet());
         }
 
         /// <summary>

@@ -36,8 +36,7 @@ namespace PureWave.View
 
             Messenger.Default.Register<VolumeMessage>(this, (vm) => BackgroundMediaPlayer.Current.Volume = vm.Volume);
             BackgroundMediaPlayer.Current.CurrentStateChanged += Current_CurrentStateChanged;
-            BackgroundMediaPlayer.Current.SetUriSource(new Uri(_vm.StreamUrl));
-            BackgroundMediaPlayer.Current.Play();
+            BackgroundMediaPlayer.Current.AutoPlay = true;
         }
 
         private void Current_CurrentStateChanged(MediaPlayer sender, object args)
