@@ -21,6 +21,7 @@ namespace PureWave.ViewModel
     {
         private double _volume = 1;
         private Bitrate _selectedBitrate;
+        private string _previousTrackInfo;
 
         #region Properties
 
@@ -217,13 +218,18 @@ namespace PureWave.ViewModel
             try
             {
                 var trackInfo = await HttpClient.GetStringAsync("http://purewave.ru/assets/snippets/id3/id3.txt");
-                var trackParams = trackInfo.Split(':');
+                if (string.IsNullOrEmpty(trackInfo) || trackInfo == _previousTrackInfo)
+                    return;
 
-                if (Artist == trackParams[0] && Track == trackParams[1])
+                _previousTrackInfo = trackInfo;
+
+                var trackParams = trackInfo.Split(new string[] { ":", @"\\-" }, StringSplitOptions.RemoveEmptyEntries);
+                if (trackParams.Length == 0)
                     return;
 
                 Artist = trackParams[0];
-                Track = trackParams[1];
+                if (trackParams.Length > 1)
+                    Track = trackParams[1];
 
 #if WINDOWS_PHONE_APP
                 // Отправляем фоновому потоку информацию о треке
