@@ -22,7 +22,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <Style x:Key="customSlider" TargetType="Slider">
         <Setter Property="Background" Value="{ThemeResource SliderTrackBackgroundThemeBrush}"/>
         <Setter Property="BorderBrush" Value="{ThemeResource SliderBorderThemeBrush}"/>
@@ -90,6 +90,39 @@
                                 <Thumb x:Name="HorizontalThumb" AutomationProperties.AccessibilityView="Raw" Background="White" Grid.Column="1" DataContext="{TemplateBinding Value}" Height="19" Style="{StaticResource customThumb}" VerticalAlignment="Top" Width="19"/>
                             </Grid>
                         </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="ListViewItem" x:Key="listViewStyle">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListViewItem">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal"/>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="SelectionStates">
+                                <VisualState x:Name="Unselected">
+                                    <Storyboard>
+                                        <ColorAnimation Duration="0" Storyboard.TargetName="myback" Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" To="Transparent"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="SelectedUnfocused">
+                                    <Storyboard>
+                                        <ColorAnimation Duration="0" Storyboard.TargetName="myback" Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" To="SteelBlue"/>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Border x:Name="myback" Background="Transparent">
+                            <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
+                        </Border>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

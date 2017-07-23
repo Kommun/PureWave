@@ -82,7 +82,7 @@ namespace DrawerLayout
             if (o == ApplicationViewOrientation.Landscape)
             {
                 width = Window.Current.Bounds.Width / 2;
-                _listFragment.Margin = new Thickness(MinusMargin, 0, 0, 0);
+                _listFragment.Margin = new Thickness(0, 0, 0, 0);
             }
 
             else
@@ -397,7 +397,7 @@ namespace DrawerLayout
 
             // Set snap divider to 1/3 of _mainFragment width
 
-            double snapLimit = _mainFragment.ActualWidth / 3;
+            double snapLimit = _listFragment.ActualWidth / 2;
 
             // Get init position of _listFragment
             const int initialPosition = 0;

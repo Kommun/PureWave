@@ -10,6 +10,38 @@
     mc:Ignorable="d"
     RequestedTheme="Dark">
 
+    <Page.Resources>
+        <Style TargetType="HyperlinkButton" x:Key="buttonStyle">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="0,5"/>
+            <Setter Property="BorderBrush" Value="White"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="Margin" Value="20,0,0,0"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        </Style>
+
+        <Style TargetType="ContentControl" x:Key="headerStyle">
+            <Setter Property="Margin" Value="0,20,0,10"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Border BorderBrush="LightGray"
+                            BorderThickness="0,0,0,1">
+                            <TextBlock Text="{Binding}"
+                                       FontSize="17"
+                                       Foreground="Gray"
+                                       Margin="20,5"/>
+                        </Border>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -105,31 +137,54 @@
             </Grid>
 
             <!--Гамбургер-меню-->
-            <Grid Background="DimGray">
-                <StackPanel Margin="20">
-                    <HyperlinkButton Content="Сайт"
-                                 Foreground="White"
-                                 FontSize="20"
-                                 Command="{Binding SiteCommand}"/>
-                    <HyperlinkButton Content="Группа ВК"
-                                 Foreground="White"
-                                 FontSize="20"
-                                 Command="{Binding VKCommand}"/>
-                    <!--Бит-рейт-->
-                    <ToggleSwitch IsOn="{Binding IsHightQuality, Mode=TwoWay}"
-                                  VerticalContentAlignment="Center">
-                        <ToggleSwitch.OnContent>
-                            <TextBlock Text="128 бит"
-                                       FontSize="20"
-                                       Margin="0,0,0,8"/>
-                        </ToggleSwitch.OnContent>
-                        <ToggleSwitch.OffContent>
-                            <TextBlock Text="64 бит"
-                                       FontSize="20"
-                                       Margin="0,0,0,8"/>
-                        </ToggleSwitch.OffContent>
-                    </ToggleSwitch>
-                </StackPanel>
+            <Grid Background="Black">
+                <ScrollViewer>
+                    <StackPanel Margin="0,20">
+                        <ContentControl Content="МЫ В СОЦИАЛЬНЫХ СЕТЯХ"
+                               Style="{StaticResource headerStyle}"/>
+
+                        <HyperlinkButton Content="Наш сайт"
+                                         NavigateUri="http://purewave.ru/"
+                                         Style="{StaticResource buttonStyle}"/>
+                        <HyperlinkButton Content="Мы ВКонтакте"
+                                         NavigateUri="https://vk.com/pure_wave"
+                                         Style="{StaticResource buttonStyle}"/>
+                        <HyperlinkButton Content="Facebook"
+                                         NavigateUri="https://www.facebook.com/RadioPureWave"
+                                         Style="{StaticResource buttonStyle}"/>
+                        <HyperlinkButton Content="Instagram"
+                                         NavigateUri="https://www.instagram.com/pw_radio/"
+                                         Style="{StaticResource buttonStyle}"/>
+                        <HyperlinkButton Content="Viber"
+                                         Command="{Binding ViberCommand}"
+                                         Style="{StaticResource buttonStyle}"/>
+
+                        <ContentControl Content="НАСТРОЙКИ"
+                               Style="{StaticResource headerStyle}"/>
+
+                        <!--Бит-рейт-->
+                        <ListView ItemsSource="{Binding Bitrates}"
+                                  SelectedItem="{Binding SelectedBitrate, Mode=TwoWay}"
+                                  ItemContainerStyle="{StaticResource listViewStyle}"
+                                  Margin="20,0,0,0">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <HyperlinkButton Content="{Binding Name}"
+                                                 IsHitTestVisible="False"
+                                                 Style="{StaticResource buttonStyle}"
+                                                     Margin="0"/>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                        <ContentControl Content="ПРОЧЕЕ"
+                               Style="{StaticResource headerStyle}"/>
+
+                        <HyperlinkButton Content="Пожертвования"
+                                         Command="{Binding DonateCommand}"
+                                         Style="{StaticResource buttonStyle}"/>
+                    </StackPanel>
+                </ScrollViewer>
             </Grid>
         </drawerLayout:DrawerLayout>
     </Grid>

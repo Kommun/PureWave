@@ -136,6 +136,11 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="OneSignalSDK_WP_WNS">
+      <HintPath>G:\Downloads\OneSignal-WindowsPhone-SDK-1.1.1\OneSignal-WindowsPhone-SDK-1.1.1\Release\OneSignalSDK_WP81_Release\OneSignalSDK_WP_WNS.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>

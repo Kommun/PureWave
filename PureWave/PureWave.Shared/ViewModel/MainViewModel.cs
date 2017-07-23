@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Windows.System;
-using Windows.UI.Xaml.Media;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
 using PureWave.Utils;
 using PureWave.Model;
+
 #if WINDOWS_PHONE_APP
     using Windows.Media.Playback;
 #endif
@@ -20,7 +20,7 @@ namespace PureWave.ViewModel
     public class MainViewModel : PropertyChangedBase
     {
         private double _volume = 1;
-        private bool _isHightQuality = true;
+        private Bitrate _selectedBitrate;
 
         #region Properties
 
@@ -35,32 +35,42 @@ namespace PureWave.ViewModel
         public CustomCommand SoundCommand { get; set; }
 
         /// <summary>
-        /// Сайт
+        /// Вайбер
         /// </summary>
-        public CustomCommand SiteCommand { get; set; } = new CustomCommand(async (p) => await Launcher.LaunchUriAsync(new Uri("http://purewave.ru/")));
+        public CustomCommand ViberCommand { get; set; } = new CustomCommand(async p => await Launcher.LaunchUriAsync(new Uri("viber://add?number=+79607701030")));
 
         /// <summary>
-        /// Группа ВК
+        /// Пожертвовать
         /// </summary>
-        public CustomCommand VKCommand { get; set; } = new CustomCommand(async (p) => await Launcher.LaunchUriAsync(new Uri("https://vk.com/pure_wave")));
+        public CustomCommand DonateCommand { get; set; }
+
+        /// <summary>
+        /// Доступные битрейты
+        /// </summary>
+        public List<Bitrate> Bitrates { get; set; } = new List<Bitrate>
+        {
+            new Bitrate { Name = "64 бит", Url = "http://stream.purewave.ru:8000/stream64.mp3" },
+            new Bitrate { Name = "128 бит", Url = "http://stream.purewave.ru:8000/stream128.mp3" },
+            new Bitrate { Name = "256 бит", Url =" http://stream.purewave.ru:8000/stream256.mp3" }
+        };
 
         /// <summary>
         /// Ссылка на поток
         /// </summary>
         public string StreamUrl
         {
-            get { return IsHightQuality ? "http://84.22.137.76:8000/myradio" : "http://84.22.137.76:8000/pure"; }
+            get { return _selectedBitrate.Url; }
         }
 
         /// <summary>
-        /// Высокое/низкое качество
+        /// Выбранный битрейт
         /// </summary>
-        public bool IsHightQuality
+        public Bitrate SelectedBitrate
         {
-            get { return _isHightQuality; }
+            get { return _selectedBitrate; }
             set
             {
-                _isHightQuality = value;
+                _selectedBitrate = value;
                 OnPropertyChanged("StreamUrl");
 
 #if WINDOWS_PHONE_APP
@@ -139,9 +149,10 @@ namespace PureWave.ViewModel
             StartTrackUpdater();
 #endif
 
-            IsHightQuality = true;
+            SelectedBitrate = Bitrates.ElementAtOrDefault(1);
             SoundCommand = new CustomCommand(Sound);
             SendFeedbackCommand = new CustomCommand(SendFeedback);
+            DonateCommand = new CustomCommand(Donate);
             GetBackground();
         }
 
@@ -246,6 +257,11 @@ namespace PureWave.ViewModel
             if (Volume > 0)
                 Volume = 0;
             else Volume = 1;
+        }
+
+        private async void Donate(object parameter)
+        {
+            await PopupManager.ShowDonateDialog();
         }
     }
 }
