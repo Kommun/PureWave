@@ -94,7 +94,8 @@ namespace PureWave.ViewModel
         /// <summary>
         /// Фоновое изображение
         /// </summary>
-        public string BackgroundSource { get; set; } = "ms-appx:///Images/defaultBackground.jpg";
+        public string BackgroundSource { get; set; } = "https://firebasestorage.googleapis.com/v0/b/purewave-ee557.appspot.com/o/MusicImage%2FCurrentImage.png?alt=media&token=067b5235-1ef1-44d6-91d4-545645dbab65";
+        //public string BackgroundSource { get; set; } = "ms-appx:///Images/defaultBackground.jpg";
 
         /// <summary>
         /// Громкость
@@ -154,7 +155,7 @@ namespace PureWave.ViewModel
             SoundCommand = new CustomCommand(Sound);
             SendFeedbackCommand = new CustomCommand(SendFeedback);
             DonateCommand = new CustomCommand(Donate);
-            GetBackground();
+            //GetBackground();
         }
 
 #if WINDOWS_PHONE_APP

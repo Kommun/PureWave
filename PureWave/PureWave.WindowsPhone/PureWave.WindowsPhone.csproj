@@ -116,8 +116,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="OneSignalSDK_WP_WNS">
-      <HintPath>G:\Downloads\OneSignal-WindowsPhone-SDK-1.1.1\OneSignal-WindowsPhone-SDK-1.1.1\Release\OneSignalSDK_WP81_Release\OneSignalSDK_WP_WNS.dll</HintPath>
+    <Reference Include="OneSignalSDK_WP_WNS, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\OneSignalSDK_WP81_Release\OneSignalSDK_WP_WNS.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
